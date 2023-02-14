@@ -11,6 +11,6 @@
 > commit message: 문제 난이도  
 > commit description: 문제 링크
 - SQL
-> file name: 문제명
+> file name: 문제명  
 > commit message: 문제 종류  
 > commit description: 문제 링크
