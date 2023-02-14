@@ -8,7 +8,7 @@
 ### 프로그래밍 언어
 - C++  
 > file name: 문제명.cpp  
-> commit message: 문제 난이도  
+> commit message: 문제 난이도 / 알고리즘 분류  
 > commit description: 문제 링크
 - SQL
 > file name: 문제명  
