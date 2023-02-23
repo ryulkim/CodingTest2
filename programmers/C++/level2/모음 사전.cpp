@@ -3,45 +3,34 @@
 
 using namespace std;
 
-int solution(string word) {
-    int answer = 0;
-    string alphabet[8]={"A","E","I","O","U"};
-    
+int answer = 0;
+string alphabet[8]={"A","E","I","O","U"};
+bool check=0;
+
+void recurs(string word, string start, int len){
+    if(len>5){
+        return;
+    }
     for(int i=0;i<5;i++){
-        string a=alphabet[i];
+        string a=start+alphabet[i];
         answer++;
+        
         if(a==word){
-            return answer;
+            check=1;
+            return;
         }
-        for(int i=0;i<5;i++){
-            string b=a+alphabet[i];
-            answer++;
-            if(b==word){
-                return answer;
-            }
-            for(int i=0;i<5;i++){
-                string c=b+alphabet[i];
-                answer++;
-                if(c==word){
-                    return answer;
-                }
-                for(int i=0;i<5;i++){
-                    string d=c+alphabet[i];
-                    answer++;
-                    if(d==word){
-                        return answer;
-                    }
-                    for(int i=0;i<5;i++){
-                        string e=d+alphabet[i];
-                        answer++;
-                        if(e==word){
-                            return answer;
-                        }
-                    }
-                }
-            }
+        
+        recurs(word, a, len+1);
+        
+        if(check==1){
+            return;
         }
     }
+}
+
+int solution(string word) {
+    
+    recurs(word, "", 1);
     
     return answer;
 }
