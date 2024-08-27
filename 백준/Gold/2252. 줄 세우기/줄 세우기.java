@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /*
- * 시간: 162ms	메모리: 25,428KB
+ * 시간: 640ms	메모리: 46,560KB
  */
 public class Main {
 	
@@ -37,10 +37,11 @@ public class Main {
 		for (int i = 1; i <= N; i++) {
 			if(indeg[i]==0) q.add(i);
 		}
-			
+		
+		StringBuilder sb=new StringBuilder();
 		while (!q.isEmpty()){
 			int num=q.poll();
-			System.out.print(num+" ");
+			sb.append(num+" ");
 			int sz=graph[num].size();
 			
 			for (int i = 0; i < sz; i++) {
@@ -49,12 +50,7 @@ public class Main {
 				if(indeg[idx]==0) q.add(idx);
 			}
 		}	
-		
-		
-		
-		
-		
+		System.out.println(sb);
 	}
-
 }
 
