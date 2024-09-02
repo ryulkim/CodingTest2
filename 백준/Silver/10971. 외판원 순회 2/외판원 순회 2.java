@@ -5,8 +5,7 @@ import java.util.*;
 
 public class Main {
 	
-	public static int N;
-	public static Long ans=Long.MAX_VALUE;
+	public static int N, ans=Integer.MAX_VALUE;
 	public static int[][] W;
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
@@ -22,15 +21,13 @@ public class Main {
 			}
 		}
 		
-		for (int i = 0; i < N; i++) {
-			dfs(i,0,0,i);
-		}
+		dfs(0,0,0);
 		
 		System.out.println(ans);
 	}
 	
-	public static void dfs(int num, int flag, long cnt, int start) {
-		if(flag==((1<<N)-1)&&ans>cnt&&num==start) {
+	public static void dfs(int num, int flag, int cnt) {
+		if(flag==((1<<N)-1)&&ans>cnt&&num==0) {
 			ans=cnt;
 			return;
 		}
@@ -39,7 +36,7 @@ public class Main {
 			if(W[num][i]==0) continue;
 			if((flag&1<<i)!=0) continue;
 			
-			dfs(i, flag|1<<i, cnt+W[num][i], start);
+			dfs(i, flag|1<<i, cnt+W[num][i]);
 		}
 	}
 
