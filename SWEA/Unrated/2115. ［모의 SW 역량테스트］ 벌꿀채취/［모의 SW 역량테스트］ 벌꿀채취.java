@@ -77,6 +77,7 @@ class Solution
 				Collections.sort(temp);
 				
 				proc(depth+1, i, j+M, sum+temp.get(0).value);
+                temp=null;
 			}
 			sj=0;
 		}
