@@ -2,17 +2,16 @@ import java.io.*;
 import java.util.*;
 
 /*
- * 18,400 kb
- * 113 ms
+ * 96,760 kb
+ * 1,022 ms
  */
 public class Solution {
     
     public static int T,N,M,a,b,ans,cnt;
     public static ArrayList<Integer> graph[];
     public static Queue<Integer> q;
-    public static boolean smallThanMe[][];
+    public static Set<Integer> smallThanMe[];
     public static int indegree[];
-    public static boolean visited[];
     
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,14 +23,14 @@ public class Solution {
             N=Integer.parseInt(br.readLine());
             M=Integer.parseInt(br.readLine());
             graph=new ArrayList[N+1]; 
-            smallThanMe=new boolean[N+1][N+1];
+            smallThanMe=new HashSet[N+1];
             indegree=new int[N+1];
-            visited=new boolean[N+1];
             q=new LinkedList<>();
             ans=0; cnt=0;
             
             for (int i = 1; i <=N; i++) {
 				graph[i]=new ArrayList<>();
+				smallThanMe[i]=new HashSet<>();
 			}
             
             for (int i = 0; i < M; i++) {
@@ -47,23 +46,18 @@ public class Solution {
             	if(indegree[i]==0) {
             		q.add(i);
             		cnt++;
-            		visited[i]=true;
             	}
             }
             
             while(!q.isEmpty()) {
             	int num=q.poll();
             	int sum=0;
-            	boolean flag=true;
             	for (int i = 1; i <= N; i++) {
             		if(i==num) continue;
-//            		if(smallThanMe[num][i]!=visited[i])	flag=false;
-            		if(smallThanMe[num][i]) sum++;
+//            		if(smallThanMe[num][i]) sum++;
 				}
             	
-//            	visited[num]=true;
-//            	if(flag) ans++;
-            	if(sum==cnt-1) ans++;
+            	if(smallThanMe[num].size()==cnt-1) ans++;
             	
             	for (int element  : graph[num]) {
 					if(--indegree[element]==0) {
@@ -71,10 +65,14 @@ public class Solution {
 						cnt++;
 					}
 					
-					for (int i = 1; i <= N; i++) {	
-						if(smallThanMe[num][i]) smallThanMe[element][i]=true;
+					for (Integer v : smallThanMe[num]) {
+						smallThanMe[element].add(v);
 					}
-					smallThanMe[element][num]=true;
+//					for (int i = 1; i <= N; i++) {	
+//						if(smallThanMe[num][i]) smallThanMe[element][i]=true;
+//					}
+//					smallThanMe[element][num]=true;
+					smallThanMe[element].add(num);
 				}
             }
             
