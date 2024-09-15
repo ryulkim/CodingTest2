@@ -14,6 +14,7 @@ public class Main {
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st=new StringTokenizer(br.readLine()," ");
+		StringBuilder sb=new StringBuilder();
 		N=Integer.parseInt(st.nextToken());
 		M=Integer.parseInt(st.nextToken());
 		dp=new int[N+1][N+1];
@@ -39,8 +40,10 @@ public class Main {
 			int x2=Integer.parseInt(st.nextToken());
 			int y2=Integer.parseInt(st.nextToken());
 			
-			System.out.println(dp[x2][y2]-dp[x1-1][y2]-dp[x2][y1-1]+dp[x1-1][y1-1]);
+			sb.append(dp[x2][y2]-dp[x1-1][y2]-dp[x2][y1-1]+dp[x1-1][y1-1]+"\n");
 		}
+		
+		System.out.println(sb);
 		
 	}
 	
