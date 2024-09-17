@@ -21,6 +21,7 @@ public class Main {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb=new StringBuilder();
 		N=Integer.parseInt(br.readLine());
 		algo=new TreeMap<>();
 		level=new TreeMap<>();
@@ -45,20 +46,20 @@ public class Main {
 				x=Integer.parseInt(st.nextToken());
 				if(x==-1) {
 					int lev=algo.get(G).firstKey();
-					System.out.println(algo.get(G).get(lev).first());
+					sb.append(algo.get(G).get(lev).first()+"\n");
 				}
 				else {
 					int lev=algo.get(G).lastKey();
-					System.out.println(algo.get(G).get(lev).last());
+					sb.append(algo.get(G).get(lev).last()+"\n");
 				}
 			}
 			else if(op.equals("recommend2")) {
 				x=Integer.parseInt(st.nextToken());
 				if(x==-1) {
-					System.out.println(level.get(level.firstKey()).first());
+					sb.append(level.get(level.firstKey()).first()+"\n");
 				}
 				else {
-					System.out.println(level.get(level.lastKey()).last());
+					sb.append(level.get(level.lastKey()).last()+"\n");
 				}
 			}
 			else if(op.equals("recommend3")) {
@@ -66,13 +67,13 @@ public class Main {
 				L=Integer.parseInt(st.nextToken());
 				if(x==-1) {
 					Integer key=level.lowerKey(L);
-					if(key==null) System.out.println(-1);
-					else System.out.println(level.get(key).last());
+					if(key==null) sb.append("-1\n"); 
+					else sb.append(level.get(key).last()+"\n"); 
 				}
 				else {
 					Integer key=level.ceilingKey(L);
-					if(key==null) System.out.println(-1);
-					else System.out.println(level.get(key).first());
+					if(key==null) sb.append("-1\n"); 
+					else sb.append(level.get(key).first()+"\n"); 
 				}
 			}
 			else if(op.equals("add")) {
@@ -99,6 +100,7 @@ public class Main {
 				}
 			}
 		}
+		System.out.println(sb);
 	}
 	
 	static void add(int L, int P, int G) {
