@@ -43,13 +43,6 @@ public class Main {
 				num1=numbers[i];
 				num2=numbers[s];
 			}
-			
-//			System.out.println(f+" "+s);
-		}
-		
-		if(ans==MAX) {
-			num1=numbers[0];
-			num2=numbers[1];
 		}
 		
 		
