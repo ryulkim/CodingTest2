@@ -220,31 +220,5 @@ class Main {
     	return ans;
     	
     }
-    
-    static void bfs() {
-    	
-    }
-    
-    
-    /*
-     * root로부터 강한 연결 관계 도달
-     * 
-     * objectId랑 배열 id 매칭 hashMap, {objectId, oIdx}
-     * edgeId랑 배열 id 매칭 hashMap, {refId, edgeIdx}
-//     * objects: int[]
-     * edges: ArrayList<int[]>
-     * 
-     * root 모아둔 배열, int[edgeIdx]
-     * object 모아둔 배열, int[edgeIdx]
-     * 
-     * edges 집합? {edgeIdx, 관계} => 관계: (src, dst)
-     * connections {oIdx, SET<edgeIdx>}
-     * 
-     * strong edges hashMap : {edgeIdx, 관계} => 관계: (src, dst)
-     * weak edges hashMap : {edgeIdx, 관계} => 관계: (src, dst)
-     * 
-     * 
-     * 
-     */
 
 }
