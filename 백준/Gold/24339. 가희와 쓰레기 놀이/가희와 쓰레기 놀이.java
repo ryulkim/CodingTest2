@@ -31,7 +31,6 @@ class Main {
     static ArrayList<Node> objects;
     static ArrayList<Edge> edges;
     static HashMap<Integer, int[]> strongs;
-    static HashMap<Integer, int[]> weaks;
     static HashMap<Integer, HashSet<Integer>> goes;
     static HashMap<Integer, HashSet<Integer>> comes;
     static ArrayDeque<Integer> q;
@@ -46,7 +45,6 @@ class Main {
         objects=new ArrayList<>();
         edges=new ArrayList<>();
         strongs=new HashMap<>();
-        weaks=new HashMap<>();
         goes=new HashMap<>();
         comes=new HashMap<>();
         q=new ArrayDeque<>();
@@ -114,7 +112,6 @@ class Main {
     	int idx2=objectMapper.get(oId2);
     	edgeMapper.put(rId, eId);
     	
-    	edges.add(new Edge(idx1, idx2));
     	if(!goes.containsKey(idx1)) {
     		goes.put(idx1, new HashSet<>());
     	}
@@ -124,12 +121,10 @@ class Main {
     	}
     	comes.get(idx2).add(eId);
     	
-    	if(relation.equals("->")) {
-    		weaks.put(eId, new int[] {idx1, idx2});
-    	}
-    	else {
+    	if(relation.equals("=>")) {
     		strongs.put(eId, new int[] {idx1, idx2});
     	}
+    	edges.add(new Edge(idx1, idx2));
     }
     
     static void remove(StringTokenizer st) {
@@ -137,7 +132,6 @@ class Main {
     	int eId=edgeMapper.get(rId);
     	edges.get(eId).isDeleted=true;
     	strongs.remove(eId);
-    	weaks.remove(eId);
     }
     
     static void inputRoot() {
@@ -203,7 +197,6 @@ class Main {
 	    		if(goSets==null) continue;
 				for(int eId : goSets) {
 					strongs.remove(eId);
-					weaks.remove(eId);
 					edges.get(eId).isDeleted=true;
 				}
 				
@@ -211,7 +204,6 @@ class Main {
 	    		if(comeSets==null) continue;
 				for (int eId : comeSets) {
 					strongs.remove(eId);
-					weaks.remove(eId);
 					edges.get(eId).isDeleted=true;
 				}
 			}
