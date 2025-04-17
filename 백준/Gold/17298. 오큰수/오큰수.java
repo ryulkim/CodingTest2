@@ -5,8 +5,7 @@ import java.util.*;
 
 public class Main {
 	static int N, x;
-	static ArrayList<Integer> arr;
-	static int[] ans;
+	static int[] arr, ans;
 	static Stack<int[]> stk;
 	
     public static void main(String[] args) throws IOException {
@@ -14,7 +13,7 @@ public class Main {
     	StringBuilder sb=new StringBuilder();
         
     	N=Integer.parseInt(br.readLine());
-    	arr=new ArrayList<>();
+    	arr=new int[N];
     	ans=new int[N];
     	stk=new Stack<>();//숫자, 인덱스
     	
@@ -23,11 +22,11 @@ public class Main {
     	StringTokenizer st=new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
         	x=Integer.parseInt(st.nextToken());
-        	arr.add(x);
+        	arr[i]=x;
 		}
         
         for (int i = 0; i < N; i++) {
-        	x=arr.get(i);
+        	x=arr[i];
         	while(!stk.isEmpty()&&x>stk.peek()[0]) {
         		ans[stk.peek()[1]]=x;
         		stk.pop();
@@ -41,6 +40,4 @@ public class Main {
 		}
         System.out.println(sb);
     }
-
-    
 }
