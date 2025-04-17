@@ -17,8 +17,6 @@ public class Main {
     	ans=new int[N];
     	stk=new Stack<>();//숫자, 인덱스
     	
-    	Arrays.fill(ans, -1);
-    	
     	StringTokenizer st=new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
         	x=Integer.parseInt(st.nextToken());
@@ -35,7 +33,8 @@ public class Main {
 		}
         
         for (int i = 0; i < N; i++) {
-			sb.append(ans[i]);
+        	if(ans[i]==0) sb.append(-1);
+        	else sb.append(ans[i]);
 			sb.append(" ");
 		}
         System.out.println(sb);
