@@ -1,16 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.StringTokenizer;
 
 public class Main {
 	
 	static long N;
-	static long[][] basic;
+	static long[][] BASIC={{1,1},{1,0}};
 	static final int MOD=1000_000_007;
 	
     public static void main(String[] args) throws NumberFormatException, IOException {
@@ -25,35 +20,30 @@ public class Main {
     public static void init() throws IOException {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     	N=Long.parseLong(br.readLine());
-    	basic=new long[][] {{1,1},{1,0}};
     }
     
     public static long[][] proc(long n) {
-    	if(n==1) return basic;
+    	if(n==1) return BASIC;
     	
     	long[][] half=proc(n/2);
     	long[][] ret=multiply(half, half);
     	
     	if(n%2==1) {
-    		ret=multiply(ret, basic);
+    		ret=multiply(ret, BASIC);
     	}
     	
     	return ret;
     }
     
     public static long[][] multiply(long[][] a, long[][] b) {
-    	long[][] ans=new long[2][2];
-    	
-    	ans[0][0]=mod(a[0][0]*b[0][0]+a[1][0]*b[0][1]);
-    	ans[0][1]=mod(a[0][0]*b[0][1]+a[1][0]*b[1][1]);
-    	ans[1][0]=mod(a[1][0]*b[0][0]+a[1][1]*b[1][0]);
-    	ans[1][1]=mod(a[1][0]*b[0][1]+a[1][1]*b[1][1]);
-    	
-    	return ans;
+    	long[][] res = new long[2][2];
+
+        res[0][0] = (a[0][0]*b[0][0] + a[0][1]*b[1][0]) % MOD;
+        res[0][1] = (a[0][0]*b[0][1] + a[0][1]*b[1][1]) % MOD;
+        res[1][0] = (a[1][0]*b[0][0] + a[1][1]*b[1][0]) % MOD;
+        res[1][1] = (a[1][0]*b[0][1] + a[1][1]*b[1][1]) % MOD;
+
+        return res;
     }
-    
-    public static long mod(long value) {
-    	return value%MOD;
-    }
-    
+   
 }
