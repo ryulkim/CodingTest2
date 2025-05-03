@@ -5,28 +5,15 @@ import java.util.HashSet;
 
 public class Main {
 	
-	static int x;
-	static HashSet<Integer> hs;
-
-    public static void main(String[] args) throws NumberFormatException, IOException {
-    	
-    	init();
-    	
-    	proc();
-        
-    }
-    
-    public static void init() throws IOException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-    	hs=new HashSet<Integer>();
+    	HashSet<Integer> hs=new HashSet<Integer>();
     	
     	for (int i = 0; i < 10; i++) {
-			x=Integer.parseInt(br.readLine());
+			int x=Integer.parseInt(br.readLine());
 			hs.add(x%42);
 		}
-    }
-    
-    public static void proc() {
+    	
     	System.out.println(hs.size());
     }
     
