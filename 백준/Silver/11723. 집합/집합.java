@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class Main {
 	
 	static int M;
-	static boolean arr[];
+	static int S;
 
     public static void main(String[] args) throws NumberFormatException, IOException {
     	init();
@@ -18,7 +18,6 @@ public class Main {
     public static void init() throws IOException {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     	M=Integer.parseInt(br.readLine());
-    	arr=new boolean[21];
     	StringBuilder sb=new StringBuilder();
     	
     	for (int i = 0; i < M; i++) {
@@ -33,7 +32,7 @@ public class Main {
     			remove(Integer.parseInt(st.nextToken()));
     			break;
     		case "check":
-    			sb.append(check(Integer.parseInt(st.nextToken()))+"\n");
+    			sb.append(check(Integer.parseInt(st.nextToken()))).append('\n');
     			break;
     		case "toggle":
     			toggle(Integer.parseInt(st.nextToken()));
@@ -54,31 +53,27 @@ public class Main {
     }
     
     public static void add(int x) {
-    	arr[x]=true;
+    	S|=(1<<x);
     }
     
     public static void remove(int x) {
-    	arr[x]=false;
+    	S&=~(1<<x);
     }
     
     public static int check(int x) {
-    	return arr[x]?1:0;
+    	return (S&(1<<x))!=0?1:0;
     }
     
     public static void toggle(int x) {
-    	if(check(x)==0) {
-    		add(x);
-    		return;
-    	}
-    	remove(x);
+    	S^=(1<<x);
     }
     
     public static void all() {
-    	Arrays.fill(arr, true);
+    	S=(1<<21)-1;
     }
     
     public static void empty() {
-    	Arrays.fill(arr, false);
+    	S=0;
     }
 
 }
