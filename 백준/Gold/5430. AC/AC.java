@@ -14,13 +14,14 @@ public class Main {
 
     public static void main(String[] args) throws NumberFormatException, IOException {
     	init();
-    	proc();
+//    	proc();
 //    	chk();
     }
     
     public static void init() throws IOException {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     	T=Integer.parseInt(br.readLine());
+    	StringBuilder sb=new StringBuilder();
     	
     	for (int testCase = 0; testCase < T; testCase++) {
 			String cmd=br.readLine();
@@ -46,33 +47,36 @@ public class Main {
 					}
 			}
 			
-			print();
+			print(sb);
 		}
+    	
+    	System.out.println(sb);
     }
     
-    public static void print() {
+    public static void print(StringBuilder sb) {
     	if(error) {
-    		System.out.println("error");
+    		sb.append("error");
     	}
     	else if(l<f) {
-    		System.out.println("[]");
+    		sb.append("[]");
     	}
     	else {
-    		System.out.print("[");
+    		sb.append("[");
     		if(isReverse) {
     			for (int i = l; i > f; i--) {
-					System.out.print(arr[i]+",");
+    				sb.append(arr[i]+",");
 				}
-    			System.out.println(arr[f]+"]");
+    			sb.append(arr[f]+"]");
     		}
     		else {
     			for (int i = f; i < l; i++) {
-					System.out.print(arr[i]+",");
+    				sb.append(arr[i]+",");
 				}
-    			System.out.println(arr[l]+"]");
+    			sb.append(arr[l]+"]");
     		}
     		
     	}
+    	sb.append("\n");
     }
     
     public static void chk() {
@@ -97,10 +101,5 @@ public class Main {
     	}
     	return true;
     }
-    
-    public static void proc() {
-    	
-    }
-   
     
 }
