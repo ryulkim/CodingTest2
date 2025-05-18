@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 
@@ -46,39 +47,53 @@ public class Main {
     
     
     public static String bfs(int init, int ans) {
-    	ArrayDeque<Objects> q=new ArrayDeque<>();
-    	q.add(new Objects("", init));
+    	ArrayDeque<Integer> q=new ArrayDeque<>();
+    	q.add(init);
     	boolean[] chk=new boolean[10000];
+    	int[] from=new int[10000];
+    	char[] how=new char[10000];
+    	
+    	Arrays.fill(from, -1);
     	
     	while(!q.isEmpty()) {
-    		Objects obj=q.poll();
+    		int num=q.poll();
     		
 //    		System.out.println(obj.cmd+" "+obj.num);
     		
-    		if(obj.num==ans) {
-    			return obj.cmd;
+    		if(num==ans) {
+    			String s="";
+    			
+    			while(num!=init) {
+    				s=String.valueOf(how[num])+s;
+    				num=from[num];
+    			}
+    			return s;
     		}
     		
-    		int l=left(obj.num);
-    		int d=D(obj.num);
-    		int s=S(obj.num);
-    		int r=right(obj.num);
+    		int l=left(num);
+    		int d=D(num);
+    		int s=S(num);
+    		int r=right(num);
     		
-    		if(!chk[l]) {
-    			q.add(new Objects(obj.cmd+"L",l));
-    			chk[l]=true;
+    		if(from[l]==-1) {
+    			q.add(l);
+    			from[l]=num;
+    			how[l]='L';
     		}
-    		if(!chk[d]) {
-    			q.add(new Objects(obj.cmd+"D",d));
-    			chk[d]=true;
+    		if(from[d]==-1) {
+    			q.add(d);
+    			from[d]=num;
+    			how[d]='D';
     		}
-    		if(!chk[s]) {
-    			q.add(new Objects(obj.cmd+"S",s));
-    			chk[s]=true;
+    		if(from[s]==-1) {
+    			q.add(s);
+    			from[s]=num;
+    			how[s]='S';
     		}
-    		if(!chk[r]) {
-    			q.add(new Objects(obj.cmd+"R",r));
-    			chk[r]=true;
+    		if(from[r]==-1) {
+    			q.add(r);
+    			from[r]=num;
+    			how[r]='R';
     		}
     	}
     	
