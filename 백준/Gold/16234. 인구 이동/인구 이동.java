@@ -21,7 +21,6 @@ public class Main {
     	int ans=0;
     	while(proc()>0) {
     		ans++;
-//    		print(graph);
     	}
     	System.out.println(ans);
     }
@@ -42,22 +41,10 @@ public class Main {
 			}
 		}
     }
-	
-    
-    public static void print(int[][] arr) {
-    	for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				System.out.print(arr[i][j]+" ");
-			}
-			System.out.println();
-		}
-    	System.out.println();
-    }
     
     public static int proc() {
     	int[][] together=new int[N][N];
     	int num=1;
-
     	
     	for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -67,54 +54,11 @@ public class Main {
 			}
 		}
     	
-//    	print(together);
-    	
-//    	System.out.println(num);
     	if(num>N*N) return -1;
-    	
-//    	for (int i = 1; i < num; i++) {
-//    		int r=infos.get(i-1)[0];
-//    		int c=infos.get(i-1)[1];
-//    		int cnt=infos.get(i-1)[2];
-//    		int sum=infos.get(i-1)[3];
-//    		
-////    		System.out.println(r+" "+c);
-//    		
-//			cal(r,c,together,i,sum/cnt);
-//		}
     	
     	return num-1;
     }
 
-    
-    public static void cal(int r, int c, int[][] arr, int num, int value) {
-    	ArrayDeque<int[]> q=new ArrayDeque<>();
-    	boolean chk[][]=new boolean[N][N];
-    	q.add(new int[] {r,c});
-    	chk[r][c]=true;
-    	graph[r][c]=value;
-    	
-    	while(!q.isEmpty()) {
-    		int[] info=q.poll();
-    		r=info[0];
-    		c=info[1];
-    		
-    		for (int i = 0; i < 4; i++) {
-    			int nr=r+dr[i];
-    			int nc=c+dc[i];
-				
-    			if(!valid(nr,nc)) continue;
-    			if(arr[nr][nc]!=num) continue;
-    			if(chk[nr][nc]) continue;
-    			
-    			chk[nr][nc]=true;
-    			q.add(new int[] {nr,nc});
-    			graph[nr][nc]=value;
-			}
-    	}
-    	
-//    	System.out.println(sum+" "+cnt);
-    }
     
     public static void bfs(int r, int c, int[][] arr, int num) {
     	ArrayDeque<int[]> q=new ArrayDeque<>();
@@ -140,7 +84,7 @@ public class Main {
     			if(arr[nr][nc]!=0) continue;
     			
     			int value=Math.abs(graph[r][c]-graph[nr][nc]);
-//    			System.out.println("value: "+value+" "+L+" "+R);
+
     			if(value<L||value>R) continue;
     			
     			arr[nr][nc]=num;
