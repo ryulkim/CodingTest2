@@ -27,7 +27,7 @@ public class Main {
     		else if(a[1]==b[1]) {
     			return Integer.compare(b[2], a[2]);
     		}
-    		return Integer.compare(b[0], a[0]);
+    		return Integer.compare(b[1], a[1]);
     	});
     	
     	for (int i = 0; i < N; i++) {
@@ -42,20 +42,33 @@ public class Main {
 	
 	
     public static void proc() {
-    	int rank=1;
-    	int gold=0, silver=0, bronze=0;
+    	int rank=0;
+    	int cnt=0;
+    	int gold=-1, silver=-1, bronze=-1;
     	while(!pq.isEmpty()) {
     		int[] info=pq.poll();
-    		if(info[0]!=K) {
+    		
+//    		System.out.println(info[0]+" "+info[1]+" "+info[2]+" "+info[3]);
+//    		System.out.println(rank);
+    		
+
+    		
+    		if(gold==info[1]&&silver==info[2]&&bronze==info[3]) {
+    			cnt++;
+    		}
+    		else {
+    			rank+=cnt;
+    			cnt=0;
     			rank++;
-    			continue;
+    			gold=info[1];
+    			silver=info[2];
+    			bronze=info[3];
     		}
     		
-    		if(gold!=info[1]&&silver!=info[2]&&bronze!=info[3]) {
-    			rank++;
+    		if(info[0]==K) {
+    			break;
     		}
-    		
-    		break;
+			
     	}
     	System.out.println(rank);
     }
