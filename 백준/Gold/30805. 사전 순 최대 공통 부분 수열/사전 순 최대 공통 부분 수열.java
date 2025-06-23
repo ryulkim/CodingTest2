@@ -1,79 +1,90 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
 
 public class Main {
+	
+	static int N, M;
+	static int[] A, B;
+	static int[][] lcs;
+	static PriorityQueue<int[]> q;
 
-    static class Num implements Comparable<Num> {
-        int value;
-        int idx;
-
-        public Num(int value, int idx) {
-            this.value = value;
-            this.idx = idx;
-        }
-
-        // 숫자를 내림차 순으로
-        // 같다면 인덱스 오름차순으로
-        @Override
-        public int compareTo(Num o) {
-            return this.value == o.value ? this.idx - o.idx : o.value - this.value;
-        }
+    public static void main(String[] args) throws NumberFormatException, IOException {
+    	init();
+    	proc();
+//    	chk();
     }
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        int n = Integer.parseInt(br.readLine());
-        int[] A = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-        int m = Integer.parseInt(br.readLine());
-        int[] B = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-
-        // 값이 더 큰 것 대로, 같다면 인덱스가 더 앞인 것으로
-        // A 수열의 최대값 순으로 우선순위큐에 저장
-        PriorityQueue<Num> Apq = new PriorityQueue<>();
-
-        // B 수열의 최댓값 순으로 우선순위큐에 저장
-        PriorityQueue<Num> Bpq = new PriorityQueue<>();
-
-        // 큰 값 순으로 정렬해서 Apq에 담음
-        for (int i = 0; i < n; i++) {
-            Apq.add(new Num(A[i], i));
-        }
-
-        int start = 0; // B 배열에서 탐색 시작 위치
-        int limitIdx = -1; // 이미 선택된 A 값들의 인덱스보다 앞선 값은 무시하기 위한 기준
-
-        // A의 큰 값부터 B에서 순차적으로 대응되는 값 찾기
-        while (!Apq.isEmpty() ) {
-            Num nextMax = Apq.poll();
-
-            for (int i = start; i < m; i++) {
-                // 다음 큰 값이 B[i] 와 같고, 이전 선택된 최댓값의 인덱스 값보다 크다면
-                if (nextMax.value == B[i] && limitIdx < nextMax.idx) {
-                    Bpq.add(new Num(nextMax.value, i));
-
-                    start = i + 1; // 탐색 범위를 다음으로 지정
-                    limitIdx = nextMax.idx; // 큰 값의 인덱스를 현재 맥스값으로 갱신
-                    break;
-                }
-            }
-        }
-
-        // 정답 작성
-        StringBuilder sb = new StringBuilder();
-        sb.append(Bpq.size()).append("\n");
-
-        while (!Bpq.isEmpty()) {
-            sb.append(Bpq.poll().value).append(" ");
-        }
-
-        System.out.println(sb.toString());
-
+    
+    public static void init() throws IOException {
+    	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    	N=Integer.parseInt(br.readLine());
+    	A=new int[N+1];
+    	q=new PriorityQueue<>((a,b)->{
+    		if(a[0]==b[0]) return Integer.compare(a[1], b[1]);
+    		return Integer.compare(b[0],a[0]);
+    	});
+    		
+    	
+    	StringTokenizer st=new StringTokenizer(br.readLine());
+    	for (int i = 0; i < N; i++) {
+    		int x=Integer.parseInt(st.nextToken());
+    		A[i]=x;
+    		q.add(new int[] {x,i});
+		}
+    	
+    	M=Integer.parseInt(br.readLine());
+    	B=new int[M+1];
+    	lcs=new int[N+1][M+1];
+    	
+    	st=new StringTokenizer(br.readLine());
+    	for (int i = 0; i < M; i++) {
+			int x=Integer.parseInt(st.nextToken());
+			B[i]=x;
+		}
+    	
     }
-
-
-
-
+      
+    
+    public static void proc() {
+    	StringBuilder sb=new StringBuilder();
+    	
+    	int start=0;
+    	int ans=0;
+    	int aIdx=-1;
+    	
+    	while(!q.isEmpty()) {
+    		int[] info=q.poll();
+    		if(aIdx>info[1]) continue;
+//    		System.out.println(info[0]+" "+info[1]+" "+start);
+    		
+    		for (int i = start; i < M; i++) {
+				if(B[i]==info[0]) {
+					aIdx=info[1];
+					ans++;
+					sb.append(info[0]+" ");
+					start=i+1;
+					break;
+				}
+			}
+    	}
+    	
+    	System.out.println(ans);
+    	System.out.println(sb);
+    }
+    
+    public static void chk() {
+    	for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= M; j++) {
+				System.out.print(lcs[i][j]+" ");
+			}
+			System.out.println();
+		}
+    }
+    
 }
