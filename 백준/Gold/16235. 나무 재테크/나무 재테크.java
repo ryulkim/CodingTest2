@@ -1,114 +1,133 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
-// N: 맵의 크기
-// M: 나무의 개수
-// K: K년이 지난 후
-// A[r][c]: 추가되는 양분의 양
-// x y z: 나무의 위치, 나이
 
-class Tree implements Comparable<Tree> {
-	int x, y, age;
+class Tree{
+	int r,c,age;
+//	boolean isLive;
 
-	public Tree(int x, int y, int age) {
+	public Tree(int r, int c, int age) {
 		super();
-		this.x = x;
-		this.y = y;
+		this.r = r;
+		this.c = c;
 		this.age = age;
-	}
-
-	@Override
-	public int compareTo(Tree o) {
-		return this.age - o.age;
 	}
 }
 
 public class Main {
-	static int[] adj_x = { -1, -1, -1, 0, 0, 1, 1, 1 };
-	static int[] adj_y = { -1, 0, 1, -1, 1, -1, 0, 1 };
+	
+	static int N,M,year;
+	static int[][] grains, s2d2;
+	static LinkedList<Tree> live;
+	static LinkedList<Tree> dead;
+	static int[] dr= {-1,-1,-1,0,0,1,1,1};
+	static int[] dc= {-1,0,1,-1,1,-1,0,1};
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		int[][] A = new int[N + 1][N + 1];
-		int[][] eat = new int[N + 1][N + 1]; // 양분
-		Deque<Tree> tree_list = new LinkedList<>();
-
-		// A[r][c] 입력
-		for (int i = 1; i <= N; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 1; j <= N; j++) {
-				A[i][j] = Integer.parseInt(st.nextToken());
-				eat[i][j] = 5;
+    public static void main(String[] args) throws NumberFormatException, IOException {
+    	init();
+    	proc();
+    }
+    
+    public static void init() throws IOException {
+    	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+    	StringTokenizer st=new StringTokenizer(br.readLine());
+    	N=Integer.parseInt(st.nextToken());
+    	M=Integer.parseInt(st.nextToken());
+    	year=Integer.parseInt(st.nextToken());
+    	grains=new int[N][N];
+    	s2d2=new int[N][N];
+    	live=new LinkedList<>();
+    	dead=new LinkedList<>();
+    	
+    	for (int i = 0; i < N; i++) {
+    		st=new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				s2d2[i][j]=Integer.parseInt(st.nextToken());
+				grains[i][j]=5;
 			}
 		}
-
-		// 나무 리스트에 추가
-		for (int i = 1; i <= M; i++) {
-			st = new StringTokenizer(br.readLine());
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			int tree_age = Integer.parseInt(st.nextToken());
-			tree_list.add(new Tree(x, y, tree_age));
+    	
+    	for (int i = 0; i < M; i++) {
+    		st=new StringTokenizer(br.readLine());
+			int r=Integer.parseInt(st.nextToken())-1;
+			int c=Integer.parseInt(st.nextToken())-1;
+			int z=Integer.parseInt(st.nextToken());
+			live.add(new Tree(r, c, z));
 		}
+    }
 
-		while (K > 0) {
-			Queue<Tree> die_tree_list = new LinkedList<>();
-
-			// 봄
-			for (int i = 0; i < tree_list.size();) {
-				Tree cur = tree_list.poll();
-				if (eat[cur.x][cur.y] >= cur.age) {
-					eat[cur.x][cur.y] -= cur.age;
-					cur.age++;
-					i++;
-					tree_list.add(cur);
-				} else {
-					die_tree_list.add(cur);
-				}
-			}
-
-			// 여름
-			for (Tree t : die_tree_list) {
-				eat[t.x][t.y] += t.age / 2;
-			}
-
-			// 가을
-			Queue<Tree> temp_list = new LinkedList<>();
-			for (Tree t : tree_list) {
-				if (t.age % 5 == 0) {
-					temp_list.add(t);
-				}
-			}
-			while (!temp_list.isEmpty()) {
-				Tree t = temp_list.poll();
-
-				for (int i = 0; i < 8; i++) {
-					int next_x = t.x + adj_x[i];
-					int next_y = t.y + adj_y[i];
-					if (next_x >= 1 && next_x <= N && next_y >= 1 && next_y <= N) {
-						tree_list.addFirst(new Tree(next_x, next_y, 1));
-					}
-				}
-			}
-
-			// 겨울
-			for (int i = 1; i <= N; i++) {
-				for (int j = 1; j <= N; j++) {
-					eat[i][j] += A[i][j];
-				}
-			}
-
-			K--;
+    public static void proc() {
+    	for (int i = 0; i < year; i++) {
+			spring();
+			summer();
+			fall();
+			winter();
 		}
+    	System.out.println(live.size());
+    }
 
-		bw.write(tree_list.size() + "\n");
-		bw.flush();
-		bw.close();
+    
+    public static void spring() {
+    	int sz=live.size();
+    	
+    	for (int i = 0; i < sz; i++) {
+			Tree t=live.poll();
+			
+			if(grains[t.r][t.c]>=t.age) {
+    			grains[t.r][t.c]-=t.age;
+    			t.age++;
+    			live.add(t);
+    		}
+    		else dead.add(t);
+		}	
+    }
+    
+    public static void summer() {
+    	for (Tree t : dead) {
+    		grains[t.r][t.c]+=t.age/2;
+		}
+    	dead.clear();
+    }
+    
+    public static void fall() {
+    	LinkedList<Tree> temp=new LinkedList<>();
+    	
+    	for (Tree t: live) {
+    		if(t.age%5==0) temp.add(t);
+		}
+    	
+    	while(!temp.isEmpty()) {
+    		Tree t=temp.poll();
+    		
+			for (int i = 0; i < 8; i++) {
+				int nr=t.r+dr[i];
+				int nc=t.c+dc[i];
+				if(valid(nr,nc)) {
+					Tree newTree=new Tree(nr,nc,1);
+					live.addFirst(newTree);
+				}
+			}
+		}
+    	
+    }
+    
+	public static void winter() {
+    	for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				grains[i][j]+=s2d2[i][j];
+			}
+		}
+    }
+	
+	private static boolean valid(int r, int c) {
+		return r>=0&&r<N&&c>=0&&c<N;
 	}
+    
 }
