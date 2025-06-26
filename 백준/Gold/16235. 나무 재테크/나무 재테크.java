@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -25,8 +26,8 @@ public class Main {
 	
 	static int N,M,year;
 	static int[][] grains, s2d2;
-	static LinkedList<Tree> live;
-	static LinkedList<Tree> dead;
+	static Deque<Tree> live;
+	static Deque<Tree> dead;
 	static int[] dr= {-1,-1,-1,0,0,1,1,1};
 	static int[] dc= {-1,0,1,-1,1,-1,0,1};
 
@@ -43,8 +44,8 @@ public class Main {
     	year=Integer.parseInt(st.nextToken());
     	grains=new int[N][N];
     	s2d2=new int[N][N];
-    	live=new LinkedList<>();
-    	dead=new LinkedList<>();
+    	live=new ArrayDeque<>();
+    	dead=new ArrayDeque<>();
     	
     	for (int i = 0; i < N; i++) {
     		st=new StringTokenizer(br.readLine());
