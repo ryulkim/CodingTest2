@@ -38,16 +38,13 @@ public class Main {
     		ans=0;
     	}
     	
-    	while(end<N){
+    	while(start<N&&end<N){
     		int diff=arr[end]-arr[start];
     		if(diff>=M) {
     			ans=Math.min(ans, diff);
-    			start++;
+                start++;
     		}
     		else {
-    			end++;
-    		}
-    		if(start==end) {
     			end++;
     		}
     	}
