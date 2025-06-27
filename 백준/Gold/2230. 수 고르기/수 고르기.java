@@ -3,15 +3,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 
 public class Main {
 	
-	static int N, M;
-	static long ans=2000_000_001;
-	static long[] arr;
-	static TreeMap<Long, Integer> tm;
+	static int N, M, ans=2000_000_000;
+	static int[] arr;
 
     public static void main(String[] args) throws NumberFormatException, IOException {
     	init();
@@ -24,27 +21,36 @@ public class Main {
     	StringTokenizer st=new StringTokenizer(br.readLine());
     	N=Integer.parseInt(st.nextToken());
     	M=Integer.parseInt(st.nextToken());
-    	arr=new long[N];
-    	tm=new TreeMap<>();
+    	arr=new int[N];
     	
     	for (int i = 0; i < N; i++) {
-			long num=Long.parseLong(br.readLine());
+			int num=Integer.parseInt(br.readLine());
 			arr[i]=num;
-			tm.put(num, tm.getOrDefault(num, 0)+1);
 		}
     	
     	Arrays.sort(arr);
     }
 
     public static void proc() {
-//    	int start=0, end=start+1;
+    	int start=0, end=start+1;
     	
-    	for (int i = 0; i < N; i++) {
-			Long num=tm.ceilingKey(arr[i]+M);
-			if(num!=null) {
-				ans=Math.min(ans, num-arr[i]);
-			}
-		}
+    	if(M==0) {
+    		ans=0;
+    	}
+    	
+    	while(end<N){
+    		int diff=arr[end]-arr[start];
+    		if(diff>=M) {
+    			ans=Math.min(ans, diff);
+    			start++;
+    		}
+    		else {
+    			end++;
+    		}
+    		if(start==end) {
+    			end++;
+    		}
+    	}
     }
     
 }
