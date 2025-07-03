@@ -9,11 +9,11 @@ import java.util.StringTokenizer;
 public class Main {
 
 	static int N, M;
-	static int[][] sum;
+	static int[][] arr;
 	
     public static void main(String[] args) throws NumberFormatException, IOException {
     	init();
-    	proc();
+    	kadane();
     }
     
     public static void init() throws IOException {
@@ -21,29 +21,33 @@ public class Main {
     	StringTokenizer st=new StringTokenizer(br.readLine());
     	N=Integer.parseInt(st.nextToken());
     	M=Integer.parseInt(st.nextToken());
-    	sum=new int[N+1][M+1];
+    	arr=new int[N+1][M+1];
     	
     	for (int i = 1; i <= N; i++) {
 			st=new StringTokenizer(br.readLine());
 			for (int j = 1; j <= M; j++) {
-				int x=Integer.parseInt(st.nextToken());
-				sum[i][j]=sum[i-1][j]+sum[i][j-1]-sum[i-1][j-1]+x;
+				arr[i][j]=Integer.parseInt(st.nextToken());
 			}
 		}
     	
     	
     }
     
-    public static void proc() {
+    
+    public static void kadane() {
     	int ans=-1000_000_000;
     	
-    	for (int d = 1; d <= N; d++) {
-			for (int r = 1; r <= M; r++) {
-				for (int u = 1; u <= d; u++) {
-					for (int l = 1; l <= r; l++) {
-						int value=sum[d][r]-sum[u-1][r]-sum[d][l-1]+sum[u-1][l-1];
-						ans=Math.max(ans, value);
-					}
+    	for (int top = 1; top <= N; top++) {
+    		int[] temp=new int[M+1];
+			for (int bottom = top; bottom <= N; bottom++) {
+				for (int k = 1; k <= M; k++) {
+					temp[k]+=arr[bottom][k];
+				}
+				
+				int cur=0;
+				for (int i = 1; i <= M; i++) {
+					cur=Math.max(cur+temp[i], temp[i]);
+					ans=Math.max(cur, ans);
 				}
 			}
 		}
