@@ -28,7 +28,7 @@ public class Main {
     	arr=new int[N][M];
     	group=new int[N][M];
     	ans=new int[N][M];
-    	cnt=new int[1000_000];
+    	cnt=new int[N*M+1];
     	wall=new ArrayDeque<>();
     	
     	for (int i = 0; i < N; i++) {
