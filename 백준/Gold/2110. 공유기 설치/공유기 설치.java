@@ -30,7 +30,7 @@ public class Main {
 	}
 	
 	public static void binarySearch() {
-		int f=1, l=houses.get(N-1);
+		int f=1, l=houses.get(N-1)-houses.get(0)+1;
 		int mid=(f+l)/2;
 		
 		while(f<l) {
