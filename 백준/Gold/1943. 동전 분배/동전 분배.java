@@ -1,75 +1,61 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	
-	static int N, sum=0;
-	static ArrayList<int[]> arr;
-	static int[][] dp;
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb=new StringBuilder();
-		for (int i = 0; i < 3; i++) {
-			init(br, sb);
-		}
-		System.out.println(sb);
-//    	proc();
-    }
-    
-	public static void init(BufferedReader br, StringBuilder sb) throws NumberFormatException, IOException {
-    	N=Integer.parseInt(br.readLine());
-    	arr=new ArrayList<>();
-    	dp=new int[N+1][100_001];
-    	sum=0;
-    	
-    	for (int i = 0; i < N; i++) {
-			StringTokenizer st=new StringTokenizer(br.readLine());
-			int price=Integer.parseInt(st.nextToken());
-			int cnt=Integer.parseInt(st.nextToken());
-			arr.add(new int[] {price, cnt});
-			sum+=price*cnt;
-		}
-    	
-    	for (int i = 0; i < N; i++) {
-			Arrays.fill(dp[i], -1);
-		}
-    	
-    	if(proc()) {
-    		sb.append(1);
-    	}
-    	else {
-    		sb.append(0);
-    	}
-    	sb.append("\n");
-	}
 
-	public static boolean proc() {
-		if(sum%2!=0) return false;
-		
-		for (int i = 0; i < N; i++) {
-			int price=arr.get(i)[0];
-			int cnt=arr.get(i)[1];
-			dp[i][0]=0;
-			for (int j = price; j <= sum/2; j++) {
-				if(i>0&&dp[i-1][j]!=-1) {
-					dp[i][j]=0;
-				}
-				else if(dp[i][j-price]!=-1&&dp[i][j-price]<cnt){
-					dp[i][j]=dp[i][j-price]+1;
-				}
-			}
-		}
-		
-		if(dp[N-1][sum/2]!=-1) {
-			return true;
-		}
-		return false;
-	}
-	
+    static int N, sum;
+    static ArrayList<int[]> arr;
+    static boolean[] dp;
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb=new StringBuilder();
+        for (int t = 0; t < 3; t++) {
+            if (solve(br)) sb.append("1\n");
+            else sb.append("0\n");
+        }
+        System.out.print(sb);
+    }
+
+    static boolean solve(BufferedReader br) throws IOException {
+        N = Integer.parseInt(br.readLine());
+        arr = new ArrayList<>();
+        sum = 0;
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st=new StringTokenizer(br.readLine());
+            int price = Integer.parseInt(st.nextToken());
+            int cnt = Integer.parseInt(st.nextToken());
+            arr.add(new int[]{price, cnt});
+            sum += price * cnt;
+        }
+
+        if (sum % 2 != 0) return false;
+
+        int target = sum / 2;
+        dp = new boolean[target + 1];
+        dp[0] = true;
+
+        List<Integer> coins = new ArrayList<>();
+        for (int[] a : arr) {
+            int price = a[0];
+            int cnt = a[1];
+            int mul = 1;
+            while (cnt - mul > 0) {
+                coins.add(price * mul);
+                cnt -= mul;
+                mul *= 2;
+            }
+            if (cnt > 0) {
+                coins.add(price * cnt);
+            }
+        }
+
+        for (int coin : coins) {
+            for (int j = target; j >= coin; j--) {
+                if (dp[j - coin]) dp[j] = true;
+            }
+        }
+
+        return dp[target];
+    }
 }
