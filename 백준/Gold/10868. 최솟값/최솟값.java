@@ -35,8 +35,10 @@ public class Main {
 			st=new StringTokenizer(br.readLine());
 			int a=Integer.parseInt(st.nextToken());
 			int b=Integer.parseInt(st.nextToken());
-			System.out.println(query(0, N-1, a-1, b-1, 0));
+			sb.append(query(0, N-1, a-1, b-1, 0)+"\n");
 		}
+		
+		System.out.println(sb);
 	}
 
 	public static void rmq(int s, int e, int idx) {
