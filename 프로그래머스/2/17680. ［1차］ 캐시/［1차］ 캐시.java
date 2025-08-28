@@ -32,21 +32,22 @@ class Solution {
             Node find=hm.get(s);
             
             if(find!=null){
-                // find.recent=idx++;
-                // Node temp=pq.poll();
-                // pq.add(temp);
-                find.isDeleted=true;
-                Node newNode=new Node(s, idx++, 0);
-                pq.add(newNode);
-                hm.put(s,newNode);
+                find.recent=idx++;
+                pq.remove(find);
+                pq.add(find);
+                
+                // find.isDeleted=true;
+                // Node newNode=new Node(s, idx++, 0);
+                // pq.add(newNode);
+                // hm.put(s,newNode);
 
                 ans++;
             }
             else {
                 if(N>0){
-                    while(!pq.isEmpty()&&pq.peek().isDeleted){
-                        pq.poll();
-                    }
+                    // while(!pq.isEmpty()&&pq.peek().isDeleted){
+                    //     pq.poll();
+                    // }
                     
                     if(hm.size()>=N){
                         Node minus=pq.poll();
