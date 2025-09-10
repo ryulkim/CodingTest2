@@ -1,106 +1,85 @@
 import java.util.*;
 
 class Solution {
-    String[] times;
-    int N, T, M;
+    TreeMap<Integer, Integer> times; // String → Integer
+    int N, T, M, bh = 9, bm = 0, bus = 0;
     
     public String solution(int n, int t, int m, String[] timetable) {
-        this.times=timetable;
-        Arrays.sort(times);
-        N=n; T=t; M=m;
+        times = new TreeMap<>();
+        for (String time : timetable) {
+            int key = toMinute(time); // 직접 파싱
+            times.put(key, times.getOrDefault(key, 0) + 1);
+        }
+        N = n; T = t; M = m;
 
         return proc();
     }
     
-    public String proc(){
-        int hour=0;
-        int min=0;
-        int bh=9;
-        int bm=0;
-        int enter=0;
-        int bus=0;
-        int th=0;
-        int tm=0;
+    public String proc() {
+        int hour = 0;
+        int min = 0;
+        int enter = 0;
         
-        for(int i=0;i<times.length;){
-            String[] temp=times[i].split(":");
-            int ch=Integer.parseInt(temp[0]);
-            int cm=Integer.parseInt(temp[1]);
+        for (Map.Entry<Integer, Integer> info : times.entrySet()) {
+            int ch = info.getKey() / 60;
+            int cm = info.getKey() % 60;
+            int value = info.getValue();
             
-            if(bus==N){
-                break;
+            while (ch > bh || (ch == bh && cm > bm)) {
+                if (bus >= N - 1) {
+                    return convert(bh, bm);
+                }
+                calculateBus(1);
+                enter = 0;
             }
             
-            if(ch<bh||(ch==bh&&cm<=bm)){
-                if(th!=ch||tm!=cm){
-                    hour=cm==0?ch-1:ch;
-                    min=cm==0?59:cm-1;
-
-                    th=ch;
-                    tm=cm;
-                }
-                
-                enter++;
-                i++;
-                if(enter==M){
-                    bus++;
-                    
-                    bm+=T;
-                    bh+=bm/60;
-                    bm%=60;
-                    
-                    enter=0;                    
-                }
-
-                
-            }
-            else{
-                if(enter<M){
-                    hour=bh;
-                    min=bm;
-                }
-
-                bus++;
-                enter=0;
-                
-                bm+=T;
-                bh+=bm/60;
-                bm%=60;
-            }
+            enter += value;
+            calculateBus(enter / M);
+            enter %= M;
             
-            System.out.println(ch+" "+cm+" "+hour+" "+min+" "+enter+" "+bus);
+            if (bus >= N) {
+                hour = cm == 0 ? ch - 1 : ch;
+                min  = cm == 0 ? 59 : cm - 1;
+                return convert(hour, min);
+            }
         }
         
-        if(enter==M){
+        if (enter == M) {
             bus++;
         }
         
-        while(bus<N){
-            hour=bh;
-            min=bm;
+        while (bus < N) {
+            hour = bh;
+            min  = bm;
             bus++;
             
-            bm+=T;
-            bh+=bm/60;
-            bm%=60;
+            calculateBus(1);
         }
         
-        String ans="";
-        if(hour/10==0){
-            ans+="0";
-        }
-        ans+=hour;
-        ans+=":";
-        if(min/10==0){
-            ans+="0";
-        }
-        ans+=min;
-        
-        
+        return convert(hour, min);
+    }
+    
+    // HH:MM → 분
+    private int toMinute(String s) {
+        int h = (s.charAt(0) - '0') * 10 + (s.charAt(1) - '0');
+        int m = (s.charAt(3) - '0') * 10 + (s.charAt(4) - '0');
+        return h * 60 + m;
+    }
+
+    public String convert(int h, int m) {
+        String ans = "";
+        if (h / 10 == 0) ans += "0";
+        ans += h;
+        ans += ":";
+        if (m / 10 == 0) ans += "0";
+        ans += m;
         return ans;
     }
     
-    public void init(){
+    public void calculateBus(int cnt) {
+        bus += cnt;
+        bm += T * cnt;
+        bh += bm / 60;
+        bm %= 60;
     }
-    
 }
