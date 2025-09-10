@@ -10,8 +10,8 @@ class Solution {
         hap=new HashMap<>();
         cross=new HashMap<>();
         
-        aCount(str1);
-        bCount(str2);
+        A=count(str1);
+        B=count(str2);
         
         int cro=getCross();
         int h=getHap();
@@ -69,7 +69,7 @@ class Solution {
         return ans;
     }
     
-    public void aCount(String str){
+    public HashMap<String, Integer> count(String str){
         int sz=str.length();
         HashMap<String, Integer> t=new HashMap<>();
         
@@ -89,29 +89,7 @@ class Solution {
             }
         }
         
-        A=t;
+        return t;
     }
     
-    public void bCount(String str){
-        int sz=str.length();
-        HashMap<String, Integer> t=new HashMap<>();
-        
-        for(int i=0;i<sz-1;i++){
-            StringBuilder s=new StringBuilder();
-            for(int j=0;j<2;j++){
-                char c=str.charAt(i+j);
-                if(c>='A'&&c<='Z'||c>='a'&&c<='z'){
-                    s.append(c);
-                }
-                else break;
-            }
-            
-            if(s.length()==2){
-                String temp=new String(s).toLowerCase();
-                t.put(temp, t.getOrDefault(temp,0)+1);
-            }
-        }
-        
-        B=t;
-    }
 }
