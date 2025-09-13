@@ -1,18 +1,6 @@
 import java.util.*;
 
 class Solution {
-    
-    class Node{
-        String s;
-        int bit, last;
-        
-        Node(String s, int bit, int last){
-            this.s=s;
-            this.bit=bit;
-            this.last=last;
-        }
-    }
-    
     int row, col;
     String[][] rel;
     
@@ -28,29 +16,28 @@ class Solution {
     
     //유일성을 못 맞출 경우, 컬럼 조합을 늘려간다.
     public int proc(){
-        // if(cnt>=col) return;
-        ArrayDeque<Node> q=new ArrayDeque<>(); // 비트마스킹, 맨 뒤 idx
-        q.add(new Node("",0,-1));
+        ArrayDeque<int[]> q=new ArrayDeque<>(); // 뽑은 조합, 맨 뒤 idx
+        q.add(new int[]{0,-1});
         ArrayList<Integer> ans=new ArrayList<>();
         
         while(!q.isEmpty()){
-            Node info=q.poll();
-            int start=info.last+1;
-            // System.out.println(info.bit);
+            int[] info=q.poll();
+            int start=info[1]+1;
             
             for(int j=start;j<col;j++){
                 boolean chk=true;
                 HashSet<String> hs=new HashSet<>();
-                int bit=info.bit|1<<j;
+                int bit=info[0]*10+(j+1);
 
                 for(int i=0;i<row;i++){
                     
                     StringBuilder sb=new StringBuilder();
+                    int num=info[0];
                     
-                    for(int k=0;k<8;k++){
-                        if((info.bit&1<<k)!=0){
-                            sb.append(rel[i][k]+" ");
-                        }
+                    while(num>0){
+                        int idx=num%10;
+                        num/=10;
+                        sb.append(rel[i][idx-1]+" ");
                     }
                     
                     sb.append(rel[i][j]);
@@ -59,10 +46,7 @@ class Solution {
                     if(hs.contains(result)){
                         chk=false;
                         
-                        q.add(new Node(result, bit, j));
-                        // ArrayList<Integer> temp=new ArrayList(combi);
-                        // temp.add(j);
-                        // proc(cnt+1, temp);
+                        q.add(new int[]{bit, j});
 
                         break;
                     }
@@ -74,22 +58,42 @@ class Solution {
                     boolean isHubo=true;
                     
                     for(int hubo : ans){
-                        if((hubo&bit)==hubo){
+                        int num=hubo;
+                        boolean isSub=true;
+                        
+                        // 부분 집합이 이미 있는지 확인
+                        while(num>0){
+                            int ele=num%10;
+                            num/=10;
+                            boolean isExist=false;
+                            
+                            int num2=bit;
+                            while(num2>0){
+                                int ele2=num2%10;
+                                num2/=10;
+                                
+                                if(ele==ele2){
+                                    isExist=true;
+                                    break;
+                                }
+                            }
+                            
+                            if(!isExist){
+                                isSub=false;
+                                break;
+                            }
+                        }
+                        
+                        
+                        if(isSub){
                             isHubo=false;
                             break;
                         }
                     }
                     
                     if(isHubo) {
-                        // System.out.println("pick: "+bit);
                         ans.add(bit);
                     }
-                    // else System.out.println(bit);
-                    
-                    // for(Integer idx: combi){
-                    //     System.out.print(idx+" ");
-                    // }
-                    // System.out.println(j);
                 }
 
             }  
