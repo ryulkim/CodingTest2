@@ -98,50 +98,5 @@ class Solution {
         return ans.size();
         
     }
-/*
-    //유일성을 못 맞출 경우, 컬럼 조합을 늘려간다.
-    public void proc(int cnt, ArrayList<Integer> combi){
-        // if(cnt>=col) return;
-        
-        int start=combi.isEmpty()?0:combi.get(combi.size()-1)+1;
-        
-        for(int j=start;j<col;j++){
-            boolean chk=true;
-            HashSet<String> hs=new HashSet<>();
-
-            for(int i=0;i<row;i++){
-                StringBuilder sb=new StringBuilder();
-                for(int k=0;k<cnt;k++){
-                    sb.append(rel[i][combi.get(k)]+" ");
-                }
-                
-                sb.append(rel[i][j]);
-                
-                String result=new String(sb);
-
-                if(hs.contains(result)){
-                    chk=false;
-                    
-                    ArrayList<Integer> temp=new ArrayList(combi);
-                    temp.add(j);
-                    proc(cnt+1, temp);
-                    
-                    break;
-                }
-                
-                hs.add(result);
-            }
-            
-            if(chk){
-                ans++;
-                for(Integer idx: combi){
-                    System.out.print(idx+" ");
-                }
-                System.out.println(j);
-            }
-            
-        }  
-    }
-   */     
         
 }
