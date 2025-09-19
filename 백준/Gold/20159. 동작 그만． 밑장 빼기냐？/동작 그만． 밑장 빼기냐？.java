@@ -37,7 +37,7 @@ public class Main {
 			int sum=A[i]+(B[N/2]-B[i]); // 정훈이가 밑장 가져갈 때
 			ans=Math.max(ans, sum);	
 			if(i>1) {
-				sum=A[i]+(B[N/2]-B[i-1])-arr[N-1]; // 상대가 밑장 가져갈 때
+				sum=A[i]+(B[N/2-1]-B[i-1]); // 상대가 밑장 가져갈 때
 				ans=Math.max(ans, sum);	
 			}
 		}
