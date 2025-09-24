@@ -48,7 +48,7 @@ public class Main {
     	
     	for (int i = 1; i < N; i++) {
 			cnt[i]+=cnt[i-1];
-			ans+=Math.min(ticket[i]*cnt[i], ic[i]+cost[i]*cnt[i]);
+			ans+=Math.min((long) ticket[i]*cnt[i], (long) ic[i]+(long) cost[i]*cnt[i]);
 		}
     }
     
