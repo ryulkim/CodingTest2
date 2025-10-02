@@ -2,55 +2,64 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static final long INF = (long)4e18;
 
+	static int N, ans=-1;
+	static int[] happy, sad;
+	static int[] Lmin, Rmin, Lmax, Rmax;
+	
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine().trim());
-
-        int[] h = new int[N+1];
-        int[] t = new int[N+1];
-        for (int i = 1; i <= N; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            h[i] = Integer.parseInt(st.nextToken()); // 행복
-            t[i] = Integer.parseInt(st.nextToken()); // 피로
-        }
-
-        long[] LminH = new long[N+1];
-        long[] LmaxT = new long[N+1];
-        long[] RmaxH = new long[N+2];
-        long[] RminT = new long[N+2];
-
-        // 초기값
-        LminH[0] = INF;
-        LmaxT[0] = -INF;
-        RmaxH[N+1] = -INF;
-        RminT[N+1] = INF;
-
-        // 왼쪽 누적(1..i)
-        for (int i = 1; i <= N; i++) {
-            LminH[i] = LminH[i-1];
-            if (h[i] != 0) LminH[i] = Math.min(LminH[i], h[i]);
-
-            LmaxT[i] = LmaxT[i-1];
-            if (t[i] != 0) LmaxT[i] = Math.max(LmaxT[i], t[i]);
-        }
-        // 오른쪽 누적(i..N)
-        for (int i = N; i >= 1; i--) {
-            RmaxH[i] = RmaxH[i+1];
-            if (h[i] != 0) RmaxH[i] = Math.max(RmaxH[i], h[i]);
-
-            RminT[i] = RminT[i+1];
-            if (t[i] != 0) RminT[i] = Math.min(RminT[i], t[i]);
-        }
-
-        int ans = -1;
-        for (int k = N-1; k >= 1; k--) {
-            if (LminH[k] > RmaxH[k+1] && LmaxT[k] <= RminT[k+1]) {
-                ans = k;
-                break; // 가장 큰 k부터 보니 바로 종료
-            }
-        }
-        System.out.println(ans);
+    	init();
     }
+        
+    public static void init() throws Exception {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	StringBuilder sb = new StringBuilder();
+    	
+    	N=Integer.parseInt(br.readLine());
+    	happy=new int[N+1];
+    	sad=new int[N+1];
+    	Lmin=new int[N+1];
+    	Rmin=new int[N+1];
+    	Lmax=new int[N+1];
+    	Rmax=new int[N+1];
+    	
+    	Arrays.fill(Lmin, 1000_000_000);
+    	Arrays.fill(Rmin, 1000_000_000);
+    	Arrays.fill(Lmax, -1000_000_000);
+    	Arrays.fill(Rmax, -1000_000_000);
+
+    	for (int i = 0; i < N; i++) {
+    		StringTokenizer st = new StringTokenizer(br.readLine());
+    		int u=Integer.parseInt(st.nextToken());
+    		int v=Integer.parseInt(st.nextToken());
+    		
+    		happy[i]=u;
+    		sad[i]=v;
+		}
+    	
+    	for (int i = 1; i <= N; i++) {
+			if(happy[i-1]>0) Lmin[i]=Math.min(Lmin[i-1],happy[i-1]);
+			else Lmin[i]=Lmin[i-1];
+			
+			if(sad[i-1]>0) Lmax[i]=Math.max(Lmax[i-1], sad[i-1]);
+			else Lmax[i]=Lmax[i-1];
+		}
+    	
+    	for (int i = N-1; i >= 0; i--) {
+    		if(sad[i]>0) Rmin[i]=Math.min(Rmin[i+1], sad[i]);
+    		else Rmin[i]=Rmin[i+1];
+    		
+    		if(happy[i]>0) Rmax[i]=Math.max(Rmax[i+1], happy[i]);
+    		else Rmax[i]=Rmax[i+1];
+		}
+    	
+    	for (int i = 0; i < N-1; i++) {
+			if(Lmin[i+1]>Rmax[i+1]&&Lmax[i+1]<Rmin[i+1]) {
+				ans=i+1;
+			}
+		}
+    	
+    	System.out.println(ans);
+    }
+    
 }
