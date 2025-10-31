@@ -4,7 +4,8 @@ import java.util.*;
 public class Main {
 	
 	static int N, T, P, ans=0;
-	static int[][] arr, dp;
+	static int[][] arr;
+	static int[] dp;
 
     public static void main(String[] args) throws IOException {
     	init();
@@ -16,7 +17,7 @@ public class Main {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     	N=Integer.parseInt(br.readLine());
     	arr=new int[N][2]; 
-    	dp=new int[N+1][2]; 
+    	dp=new int[N+1]; 
     	
     	for (int i = 0; i < N; i++) {
     		StringTokenizer st=new StringTokenizer(br.readLine());
@@ -31,16 +32,13 @@ public class Main {
     public static void proc() {
     	for (int i = 0; i < N; i++) {
     		int nDay=i+arr[i][0];
-    		if(i>0) dp[i][0]=Math.max(dp[i-1][0], dp[i][0]);
+    		if(i>0) dp[i]=Math.max(dp[i-1], dp[i]);
+    		ans=Math.max(ans, dp[i]);
     		if(nDay>N) continue;
-    		dp[i][1]=Math.max(dp[i][1], dp[i][0]+arr[i][1]);
-			dp[nDay][0]=Math.max(dp[nDay][0], dp[i][1]);
-			
-			ans=Math.max(ans, dp[i][0]);
-			ans=Math.max(ans, dp[i][1]);
+			dp[nDay]=Math.max(dp[nDay], dp[i]+arr[i][1]);
 		}
     	
-    	ans=Math.max(ans, dp[N][0]);
+    	ans=Math.max(ans, dp[N]);
     	
     }
     
