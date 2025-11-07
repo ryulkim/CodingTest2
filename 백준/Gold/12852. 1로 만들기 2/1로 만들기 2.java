@@ -9,8 +9,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
     	init();
     	proc();
-    	System.out.println(dp[N]);
     	StringBuilder sb=new StringBuilder();
+    	sb.append(dp[N]).append('\n');
     	while(N>0) {
     		sb.append(N).append(" ");
     		N=last[N];
