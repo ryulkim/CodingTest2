@@ -37,10 +37,7 @@ public class Main {
 			}
 		}
     	
-    	// B로 먼저 칠할 경우
-		ans=Math.min(ans, rCnt);
-		// R로 먼저 칠할 경우
-		ans=Math.min(ans, bCnt);
+		ans=Math.min(bCnt, rCnt);
 		
 		System.out.println(ans+1);
     }
