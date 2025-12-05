@@ -2,131 +2,140 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	
-	static int N, R, C, K, r=2, c=2;
-	static HashMap<Integer, Integer> hm;
-	static int[][] arr;
-	
-    public static void main(String[] args) throws IOException {
-    	init();
-    	System.out.println(proc());
-	}
-    
-    public static void init() throws IOException {
-    	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-    	StringTokenizer st=new StringTokenizer(br.readLine());
-    	R=Integer.parseInt(st.nextToken());
-    	C=Integer.parseInt(st.nextToken());
-    	K=Integer.parseInt(st.nextToken());
-    	hm=new HashMap<>();
-    	arr=new int[202][202];
-    	N=3;
-    	
-    	for (int i = 0; i < 3; i++) {
-    		st=new StringTokenizer(br.readLine());
-			for (int j = 0; j < 3; j++) {
-				arr[i][j]=Integer.parseInt(st.nextToken());
-			}
-		}
+
+    static int R, C, K;
+    static int[][] arr = new int[101][101];
+    static int rowSize = 3, colSize = 3;  // 현재 사용하는 행/열 길이
+    static int[] cnt = new int[101];      // 수는 1~100만 나온다고 가정
+
+    public static void main(String[] args) throws Exception {
+        init();
+        System.out.println(proc());
     }
-    
+
+    public static void init() throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+
+        for (int i = 0; i < 3; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < 3; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+    }
+
     public static int proc() {
-    	for (int i = 0; i <= 100; i++) {
-    		if(arr[R-1][C-1]==K) {
-				return i;
-			}
-    		
-			if(judge()==0) {
-				R();
-			}
-			else {
-				C();
-			}
-		}
-    	
-    	return -1;
+        for (int t = 0; t <= 100; t++) {
+            if (R - 1 < 101 && C - 1 < 101 && arr[R - 1][C - 1] == K) {
+                return t;
+            }
+
+            if (t == 100) break; // 100초까지 확인했는데도 못만들면 -1
+
+            if (rowSize >= colSize) {
+                R_operation();
+            } else {
+                C_operation();
+            }
+        }
+        return -1;
     }
-    
-    public static int judge() {
-    	int row=0, col=0;
-    	
-    	for (int i = 0; i < 200; i++) {
-			for (int j = 0; j < 200; j++) {
-				if(arr[i][j]>0) {
-					row=Math.max(row, i);
-					col=Math.max(col, j);
-				}
-			}
-		}
-    	
-    	r=row; c=col;
-    	
-    	if(row>=col) return 0;
-    	return 1;
+
+    // R 연산
+    public static void R_operation() {
+        int[][] tmp = new int[101][101];
+        int newColSize = 0;
+
+        for (int i = 0; i < rowSize; i++) {
+            Arrays.fill(cnt, 0);
+
+            // 현재 행(i)의 숫자 빈도 계산
+            for (int j = 0; j < colSize; j++) {
+                int num = arr[i][j];
+                if (num == 0) continue;
+                if (num > 100) num = 100; // 혹시 몰라서 방어, 안 써도 되는 경우 많음
+                cnt[num]++;
+            }
+
+            // (숫자, 등장횟수) 리스트 생성
+            List<int[]> list = new ArrayList<>();
+            for (int num = 1; num <= 100; num++) {
+                if (cnt[num] > 0) {
+                    list.add(new int[]{num, cnt[num]});
+                }
+            }
+
+            // 등장횟수 오름차순, 숫자 오름차순
+            list.sort((a, b) -> {
+                if (a[1] == b[1]) return Integer.compare(a[0], b[0]);
+                return Integer.compare(a[1], b[1]);
+            });
+
+            // tmp에 채우기 (최대 100까지만)
+            int colIdx = 0;
+            for (int[] p : list) {
+                if (colIdx >= 100) break;   // 길이 제한
+                tmp[i][colIdx++] = p[0];    // 숫자
+                if (colIdx >= 100) break;
+                tmp[i][colIdx++] = p[1];    // 등장 횟수
+            }
+
+            newColSize = Math.max(newColSize, colIdx);
+        }
+
+        arr = tmp;
+        colSize = newColSize;
+        if (colSize > 100) colSize = 100;
     }
-    
-    public static void R() {
-    	int[][] temp=new int[202][202];
-    	
-    	for (int i = 0; i <= r; i++) {
-    		hm.clear();
-    		
-			for (int j = 0; j <= c; j++) {
-				int num=arr[i][j];
-				
-				if(num==0) continue;
-				
-				hm.put(num, hm.getOrDefault(num, 0)+1);
-			}
-			
-			ArrayList<Map.Entry<Integer, Integer>> list = new ArrayList<>(hm.entrySet());
-			
-			list.sort((a,b)->{
-				if(a.getValue()==b.getValue()) {
-					return Integer.compare(a.getKey(), b.getKey()); 
-				}
-				return Integer.compare(a.getValue(), b.getValue());
-			});
-			
-			int col=0;
-			for (Map.Entry<Integer, Integer> entry : list) {
-				temp[i][col++]=entry.getKey();
-				temp[i][col++]=entry.getValue();
-			}
-		}
-    	
-    	arr=temp;
-    }
-    
-    public static void C() {
-    	int[][] temp=new int[202][202];
-    	
-    	for (int i = 0; i <= c; i++) {
-    		hm.clear();
-    		
-			for (int j = 0; j <= r; j++) {
-				int num=arr[j][i];
-				
-				if(num==0) continue;
-				
-				hm.put(num, hm.getOrDefault(num, 0)+1);
-			}
-			
-			ArrayList<Map.Entry<Integer, Integer>> list = new ArrayList<>(hm.entrySet());
-			
-			list.sort((a,b)->{
-				if(a.getValue()==b.getValue()) {
-					return Integer.compare(a.getKey(), b.getKey()); 
-				}
-				return Integer.compare(a.getValue(), b.getValue());
-			});
-			
-			int row=0;
-			for (Map.Entry<Integer, Integer> entry : list) {
-				temp[row++][i]=entry.getKey();
-				temp[row++][i]=entry.getValue();
-			}
-		}
-    	arr=temp;
+
+    // C 연산
+    public static void C_operation() {
+        int[][] tmp = new int[101][101];
+        int newRowSize = 0;
+
+        for (int j = 0; j < colSize; j++) {
+            Arrays.fill(cnt, 0);
+
+            // 현재 열(j)의 숫자 빈도 계산
+            for (int i = 0; i < rowSize; i++) {
+                int num = arr[i][j];
+                if (num == 0) continue;
+                if (num > 100) num = 100;
+                cnt[num]++;
+            }
+
+            // (숫자, 등장횟수) 리스트 생성
+            List<int[]> list = new ArrayList<>();
+            for (int num = 1; num <= 100; num++) {
+                if (cnt[num] > 0) {
+                    list.add(new int[]{num, cnt[num]});
+                }
+            }
+
+            // 등장횟수 오름차순, 숫자 오름차순
+            list.sort((a, b) -> {
+                if (a[1] == b[1]) return Integer.compare(a[0], b[0]);
+                return Integer.compare(a[1], b[1]);
+            });
+
+            // tmp에 채우기 (최대 100까지만)
+            int rowIdx = 0;
+            for (int[] p : list) {
+                if (rowIdx >= 100) break;
+                tmp[rowIdx++][j] = p[0];
+                if (rowIdx >= 100) break;
+                tmp[rowIdx++][j] = p[1];
+            }
+
+            newRowSize = Math.max(newRowSize, rowIdx);
+        }
+
+        arr = tmp;
+        rowSize = newRowSize;
+        if (rowSize > 100) rowSize = 100;
     }
 }
