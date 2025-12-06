@@ -129,14 +129,11 @@ public class Main {
     }
     
     public static int validMove(int go) {
-    	if(go>=1&&go<=N) return go;
-    	if(go>N) {
-    		int num=go%N;
-    		return num==0?N:num;
-    	}
-    	while(go<=0) {
-    		go+=N;
-    	}
-    	return go;
+        int x = (go - 1) % N;  // 0~N-1 형태로 보정하려는 준비 단계
+
+        if (x < 0) x += N;     // 음수라면 한 번만 올려주면 0~N-1 범위 확정
+
+        return x + 1;          // 다시 1~N으로 변환
     }
+
 }
