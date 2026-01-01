@@ -36,6 +36,8 @@ public class Main {
 			for (int j = 0; j < N; j++) {
 				for (int d1 = 1; d1*d1 <= 2*N*N; d1++) {
 					for (int d2 = 1; d2*d2 <= 2*N*N; d2++) {
+						if(!(j+d1+d2<N&&i+d2<=N&&i-d1>=0)) continue;
+						
 						int[] pos=one(i,j,d1);
 						if(pos==null) continue;
 						pos=two(pos[0],pos[1],d2);
