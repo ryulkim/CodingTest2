@@ -10,13 +10,13 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N, M, H, ans=4;
+	static int N, M, H, ans=-1;
 	static boolean[][] arr;
 
     public static void main(String[] args) throws NumberFormatException, IOException {
     	init();
 //    	print();
-    	proc(0,1,1);
+    	proc();
     	System.out.println(ans==4?-1:ans);
     }
     
@@ -46,29 +46,35 @@ public class Main {
 		}
     }
     
-    public static void proc(int depth, int startH, int startN) {
-    	if(depth>3) return;
-//    	print();
-    	
-    	if(simul()) {
-    		ans=Math.min(ans, depth);
-//    		System.out.println("@@@@@@@@@@@@@@@@@@@@");
-//    		return; 
+    public static void proc() {
+    	for (int i = 0; i <= 3; i++) {
+			combi(0,i,1,1);
+			if(ans!=-1) break;
+		}
+    }
+    
+    public static void combi(int depth, int num, int startH, int startN) {
+    	if(depth==num) {
+    		if(simul()) {
+//    			System.out.println(num);
+//    			print();
+    			ans=num;
+    		}
+    		return;
     	}
+    	
+//    	System.out.println("@@@");
+
     	for (int i = startH; i <= H; i++) {
 			for (int j = startN; j < N; j++) {
-//				System.out.println(i+" "+j);
 				
 				if(arr[i][j]) continue;
 				if(arr[i][j+1]) continue;
 				if(j>1&&arr[i][j-1]) continue;
 				
-//				System.out.println("++ "+i+" "+j);
-				
 				arr[i][j]=true;
-				proc(depth+1, i, j+1);
+				combi(depth+1, num, i, j+1);
 				arr[i][j]=false;
-//				System.out.println("-- "+i+" "+j);
 			}
 			startN=1;
 		}
@@ -80,7 +86,6 @@ public class Main {
 			int curH=1;
 			
 			while(curH<=H) {
-//				System.out.println(curN+" "+curH+" "+H);
 				if(arr[curH][curN]) {
 					curN++;
 					curH++;
