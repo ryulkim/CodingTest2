@@ -61,6 +61,7 @@ public class Main {
     		return;
     	}
     	for (int i = 0; i < 4; i++) {
+    		if(horses[i].color==3) continue;
 			go(i, dices[depth]);
 			if(checkHorse(i)) {				
 				selectHorse(depth+1);
