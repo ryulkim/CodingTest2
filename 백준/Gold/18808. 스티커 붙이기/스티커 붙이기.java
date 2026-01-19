@@ -4,8 +4,9 @@ import java.util.*;
 public class Main {
 	
 	static int N, M, K, R, C;
-	static int[][] board;
+	static long[] board;
 	static int[][][][] stickers;
+	static int[][][] bitStickers;
 	static int[][] info;
 	
     public static void main(String[] args) throws IOException {
@@ -20,8 +21,9 @@ public class Main {
     	N=Integer.parseInt(st.nextToken());
     	M=Integer.parseInt(st.nextToken());
     	K=Integer.parseInt(st.nextToken());
-    	board=new int[N][M];
+    	board=new long[N];
     	stickers=new int[K][4][10][10];
+    	bitStickers=new int[K][4][10];
     	info=new int[K][2];
     	
     	for (int k = 0; k < K; k++) {
@@ -33,12 +35,18 @@ public class Main {
     		for (int i = 0; i < R; i++) {
     			st=new StringTokenizer(br.readLine());    		
     			for (int j = 0; j < C; j++) {
-    				stickers[k][0][i][j]=Integer.parseInt(st.nextToken());
+    				int value=Integer.parseInt(st.nextToken());
+    				stickers[k][0][i][j]=value;
+					bitStickers[k][0][i]+=value<<j;					
     			}
     		}
 		}
     	
     	rotateSticker();
+    	
+    }
+    
+    private static void convertBit() {
     	
     }
     
@@ -54,7 +62,7 @@ public class Main {
     	int cnt=0;
     	for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
-				if(board[i][j]==1) {
+				if((board[i]&1L<<j)!=0) {
 					cnt++;
 				}
 			}
@@ -63,32 +71,30 @@ public class Main {
     }
     
     public static boolean find(int stickerNum, int num) {
-    	int[][] arr=stickers[stickerNum][num];
+    	int[] arr=bitStickers[stickerNum][num];
     	R=info[stickerNum][0];
-    	C=info[stickerNum][1];
     	if(num%2==1) {
-    		int temp=R;
-    		R=C;
-    		C=temp;
+    		R=info[stickerNum][1];
     	}
     	
     	for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				boolean chk=true;
 				for (int r = 0; r < R; r++) {
-					for (int c = 0; c < C; c++) {
-						if(!valid(i+r,j+c)||(arr[r][c]+board[i+r][j+c])>=2) {
-							chk=false;
-							break;
-						}
+					if(!valid(i+r)) {
+						chk=false;
+						break;
+					}
+					long value=((long)arr[r]<<j)&board[i+r];
+					if(value!=0||((long)arr[r]<<j)>=(1L<<M)) {
+						chk=false;
+						break;
 					}
 				}
 				
 				if(chk) {
 					for (int r = 0; r < R; r++) {
-						for (int c = 0; c < C; c++) {
-							board[i+r][j+c]+=arr[r][c];
-						}
+						board[i+r]|=(long)arr[r]<<j;
 					}
 					
 					return true;
@@ -99,8 +105,8 @@ public class Main {
     	return false;
     }
     
-    private static boolean valid(int r, int c) {
-    	return r>=0&&r<N&&c>=0&&c<M;
+    private static boolean valid(int r) {
+    	return r>=0&&r<N;
     }
     
     private static void rotateSticker() {
@@ -132,8 +138,11 @@ public class Main {
     	for (int i = 0; i < c; i++) {
 			for (int j = 0; j < r; j++) {
 				stickers[stickerNum][num+1][i][j]=temp[i][j];
+				bitStickers[stickerNum][num+1][i]+=temp[i][j]<<j;
 			}
 		}
+    	
+    	
     }
 
 }
