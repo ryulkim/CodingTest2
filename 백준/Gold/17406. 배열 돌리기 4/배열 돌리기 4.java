@@ -79,33 +79,39 @@ public class Main {
     		int sc=c-s-1;
     		int er=r+s-1;
     		int ec=c+s-1;
-			temp=rotate(temp, sr, sc, er, ec);
+			rotate(temp, sr, sc, er, ec);
 //			System.out.println(i+" "+r+" "+c+" "+s);
 //			print(temp);
 		}
     	ans=Math.min(ans, sum(temp));
     }
     
-    private static int[][] rotate(int[][] arr, int sr, int sc, int er, int ec) {
-    	int[][] temp=cloneFrom(arr);
-    	
-    	while(sr<er&&sc<ec) {
+    private static void rotate(int[][] arr, int sr, int sc, int er, int ec) {
+    	while(sr<=er&&sc<=ec) {
+    		
+    		int next=arr[sr][sc];
     		for (int i = sc; i < ec; i++) {
-				temp[sr][i+1]=arr[sr][i];
-			}
-    		for (int i = ec; i > sc; i--) {
-				temp[er][i-1]=arr[er][i];
+    			int cur=arr[sr][i+1];
+				arr[sr][i+1]=next;
+				next=cur;
 			}
     		for (int i = sr; i < er; i++) {
-				temp[i+1][ec]=arr[i][ec];
+    			int cur=arr[i+1][ec];
+    			arr[i+1][ec]=next;
+    			next=cur;
+    		}
+    		for (int i = ec; i > sc; i--) {
+    			int cur=arr[er][i-1];
+				arr[er][i-1]=next;
+				next=cur;
 			}
     		for (int i = er; i > sr; i--) {
-    			temp[i-1][sc]=arr[i][sc];
+    			int cur=arr[i-1][sc];
+				arr[i-1][sc]=next;
+				next=cur;
 			}
     		sr++;er--;sc++;ec--;
     	}
-    	
-    	return temp;
     }
     
     private static void printMethod() {
