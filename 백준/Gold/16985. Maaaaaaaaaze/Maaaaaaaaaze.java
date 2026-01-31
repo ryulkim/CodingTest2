@@ -75,6 +75,8 @@ public class Main {
     
     public static void find() {
     	for (int i = 0; i < 4; i++) {
+    		if(ans==12) return;
+    		
     		int su=vertexs[i][0];
     		int sr=vertexs[i][1];
     		int sc=vertexs[i][2];
