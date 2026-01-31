@@ -6,7 +6,6 @@ public class Main {
 	static int[][][][] boards; // 판 번호, 회전 수, 2차원 정보
 	static int[][] select;
 	static boolean[] selectChk;
-	static int[][][] cube;
 	static int[][] direct= {{0,-1,0},{0,1,0},{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}};
 	static int[][] vertexs= {{0,0,0},{0,0,4},{0,4,0},{0,4,4},{4,4,4},{4,4,0},{4,0,4},{4,0,0}};
 	static int ans=Integer.MAX_VALUE;
@@ -21,7 +20,6 @@ public class Main {
     	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     	StringBuilder sb=new StringBuilder();
     	boards=new int[5][4][5][5];
-    	cube=new int[5][5][5];
     	select=new int[5][2];
     	selectChk=new boolean[5];
     	for (int i = 0; i < 5; i++) {
@@ -76,14 +74,6 @@ public class Main {
     }
     
     public static void find() {
-    	for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-				for (int k = 0; k < 5; k++) {
-					cube[i][j][k]=boards[select[i][0]][select[i][1]][j][k];
-				}
-			}
-		}
-    	
     	for (int i = 0; i < 4; i++) {
     		int su=vertexs[i][0];
     		int sr=vertexs[i][1];
@@ -92,13 +82,18 @@ public class Main {
     		int er=vertexs[i+4][1];
     		int ec=vertexs[i+4][2];
     		
-    		if(cube[su][sr][sc]==0||cube[eu][er][ec]==0) continue;
+    		if(get(su, sr, sc)==0||get(eu, er, ec)==0) continue;
 			int value=bfs(su,sr,sc,eu,er,ec);
 			if(value!=-1) {
 				ans=Math.min(ans, value);
 			}
 		}
     }
+    
+    private static int get(int u, int r, int c) {
+        return boards[select[u][0]][select[u][1]][r][c];
+    }
+
     
     public static int bfs(int startU, int startR, int startC, int endU, int endR, int endC) {
     	ArrayDeque<int[]> q=new ArrayDeque<>();
@@ -115,10 +110,10 @@ public class Main {
 				int c=info[2];
 				
 				int nu=cur[0]+u;
-				int nr=cur[1]+r;
+				int nr=cur[1]+r; 
 				int nc=cur[2]+c;
 				
-				if(!valid(nr,nc,nu)||cube[nu][nr][nc]==0||chk[nu][nr][nc]) continue;
+				if(!valid(nr,nc,nu)||get(nu,nr,nc)==0||chk[nu][nr][nc]) continue;
 				
 				q.add(new int[] {nu, nr, nc, cur[3]+1});
 				chk[nu][nr][nc]=true;
