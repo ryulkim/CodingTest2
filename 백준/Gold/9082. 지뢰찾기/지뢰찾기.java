@@ -111,7 +111,7 @@ public class Main {
     }
 
     public static void proc() {
-        // confirm();
+        confirm();
         // print();
         greedy();
         // print();
