@@ -41,12 +41,13 @@ public class Main {
 
     public static void print(){
         int cur=N;
-
+        StringBuilder sb=new StringBuilder();
         while(cur!=K){
-            System.out.print(cur+" ");
+            sb.append(cur+" ");
             cur=dp[cur];
         }
-        System.out.println(K);
+        sb.append(K);
+        System.out.println(sb);
     }
 
     public static Integer proc() {
