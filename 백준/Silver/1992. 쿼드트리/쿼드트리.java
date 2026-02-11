@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         init();
-        System.out.println(proc(0,0,N));
+        System.out.println(proc(0,0,N,N));
     }
 
     public static void init() throws IOException{
@@ -25,29 +25,29 @@ public class Main {
         }
     }
 
-    public static String proc(int sr, int sc, int sz) {
-        if(sz==1){
-            return String.valueOf(arr[sr][sc]);
+    public static String proc(int sr, int sc, int er, int ec) {
+        boolean flag=true;
+        int num=arr[sr][sc];
+
+        for(int i=sr;i<er;i++){
+            for(int j=sc;j<ec;j++){
+                if(num!=arr[i][j]){
+                    flag=false;
+                }
+            }
         }
 
-        String first=proc(sr,sc,sz/2);
-        String second=proc(sr,sc+sz/2,sz/2);
-        String third=proc(sr+sz/2,sc,sz/2);
-        String fourth=proc(sr+sz/2,sc+sz/2,sz/2);
-
-        String ans="("+first+second+third+fourth+")";
-        // System.out.println(ans);
-
-        if(first.equals("0")&&second.equals("0")&&third.equals("0")&&fourth.equals("0")){
-            ans="0";
+        if(flag==true){
+            return String.valueOf(num);
         }
-        else if(first.equals("1")&&second.equals("1")&&third.equals("1")&&fourth.equals("1")){
-            ans="1";
-        }
-        // System.out.println(sr+" "+sc+" "+ans+" "+sz);
 
-
-        return ans;
+        int mr=(sr+er)/2;
+        int mc=(sc+ec)/2;
+        String first=proc(sr,sc,mr,mc);
+        String second=proc(sr,mc,mr,ec);
+        String third=proc(mr,sc,er,mc);
+        String fourth=proc(mr,mc,er,ec);
+        return "("+first+second+third+fourth+")";
     }
 
 }
