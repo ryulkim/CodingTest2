@@ -4,7 +4,7 @@ import java.io.*;
 public class Main {
 
     static int R,C,N;
-    static boolean[][] arr;
+    static int[][] arr;
     static int[][] installTime;
     static int[] dr={0,0,1,-1};
     static int[] dc={-1,1,0,0};
@@ -12,25 +12,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         init();
         proc();
-        ans();
-    }
-
-    public static void ans(){
-        StringBuilder sb=new StringBuilder();
-
-        for(int i=0;i<R;i++){
-            for(int j=0;j<C;j++){
-                if(arr[i][j]){
-                    sb.append('O');
-                }
-                else{
-                    sb.append('.');
-                }
-            }
-            sb.append('\n');
-        }
-
-        System.out.println(sb);
     }
 
     public static void init() throws IOException {
@@ -39,7 +20,7 @@ public class Main {
         R=Integer.parseInt(st.nextToken());
         C=Integer.parseInt(st.nextToken());
         N=Integer.parseInt(st.nextToken());
-        arr=new boolean[R][C];
+        arr=new int[R][C];
         installTime=new int[R][C];
 
         for(int i=0;i<R;i++){
@@ -47,33 +28,49 @@ public class Main {
             for(int j=0;j<C;j++){
                 char c=s.charAt(j);
                 if(c=='.'){
-                    arr[i][j]=false;
+                    arr[i][j]=0;
                 }
                 else{
-                    arr[i][j]=true;
+                    arr[i][j]=1;
                 }
             }
         }
     }
 
     public static void proc(){
-        int time=1;
-        while(time<N){
-            installBomb(++time);
-            // print();
-            if(time==N) break;
-            bomb(++time);
-            // print();
-            if(time==N) break;
+        if(N<=1){
+            print();
+        }
+        else if(N%2==0){
+            fullBomb();
+        }
+        else if(N%4==3){
+            bomb();
+        }
+        else{
+            secondBomb();
         }
     }
+
+    private static void fullBomb(){
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                sb.append('O');
+            }
+            sb.append('\n');
+        }
+        System.out.println(sb);
+    }
+
 
     private static void print(){
         StringBuilder sb=new StringBuilder();
 
         for(int i=0;i<R;i++){
             for(int j=0;j<C;j++){
-                sb.append(installTime[i][j]);
+                if(arr[i][j]==1) sb.append('O');
+                else sb.append('.');
             }
             sb.append('\n');
         }
@@ -81,33 +78,71 @@ public class Main {
         System.out.println(sb);
     }
 
-    public static void bomb(int time){
+    public static void secondBomb(){
         for(int i=0;i<R;i++){
             for(int j=0;j<C;j++){
-                if(arr[i][j]&&installTime[i][j]+3==time){
+                if(arr[i][j]==1){
                     for(int k=0;k<4;k++){
                         int nr=i+dr[k];
                         int nc=j+dc[k];
-                        if(!valid(nr,nc)||(arr[nr][nc]&&installTime[nr][nc]==installTime[i][j])) continue;
-                        arr[nr][nc]=false;
-                        installTime[nr][nc]=0;
+                        if(!valid(nr,nc)||arr[nr][nc]==1) continue;
+                        arr[nr][nc]=2;
                     }
-                    arr[i][j]=false;
-                    installTime[i][j]=0;
                 }
             }
         }
-    }
 
-    public static void installBomb(int time){
         for(int i=0;i<R;i++){
             for(int j=0;j<C;j++){
-                if(!arr[i][j]){
-                    arr[i][j]=true;
-                    installTime[i][j]=time;
+                if(arr[i][j]==0){
+                    for(int k=0;k<4;k++){
+                        int nr=i+dr[k];
+                        int nc=j+dc[k];
+                        if(!valid(nr,nc)||arr[nr][nc]==0) continue;
+                        arr[nr][nc]=3;
+                    }
                 }
             }
         }
+
+        StringBuilder sb=new StringBuilder();
+        
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                if(arr[i][j]==1||arr[i][j]==2) sb.append('O');
+                else sb.append('.');
+            }
+            sb.append('\n');
+        }
+
+        System.out.println(sb);
+    }
+
+    public static void bomb(){
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                if(arr[i][j]==1){
+                    for(int k=0;k<4;k++){
+                        int nr=i+dr[k];
+                        int nc=j+dc[k];
+                        if(!valid(nr,nc)||arr[nr][nc]==1) continue;
+                        arr[nr][nc]=2;
+                    }
+                }
+            }
+        }
+
+        StringBuilder sb=new StringBuilder();
+        
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                if(arr[i][j]==0) sb.append('O');
+                else sb.append('.');
+            }
+            sb.append('\n');
+        }
+
+        System.out.println(sb);
     }
 
     private static boolean valid(int i, int j){
